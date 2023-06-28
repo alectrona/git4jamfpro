@@ -44,7 +44,7 @@ git add .
 git commit -m "initial commit with scripts/EAs"
 ```
 
-6. Configure your pipeline (see the [Wiki](https://github.com/alectrona/git4jamfpro/wiki) for [CircleCI](https://github.com/alectrona/git4jamfpro/wiki/Deploy-in-Bitbucket), [Bitbucket](https://github.com/alectrona/git4jamfpro/wiki/Deploy-in-CircleCI), and [GitHub](https://github.com/alectrona/git4jamfpro/wiki/Deploy-in-GitHub) setup).
+6. Configure your pipeline (see the [Wiki](https://github.com/alectrona/git4jamfpro/wiki) for [CircleCI](https://github.com/alectrona/git4jamfpro/wiki/Deploy-in-CircleCI), [Bitbucket](https://github.com/alectrona/git4jamfpro/wiki/Deploy-in-Bitbucket), and [GitHub](https://github.com/alectrona/git4jamfpro/wiki/Deploy-in-GitHub) setup).
 7. Make sure you pull the latest changes from your repository:
 
 ```

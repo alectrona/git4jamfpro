@@ -1,0 +1,51 @@
+name: git4jamfpro Job
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  push-changes-to-jamf-pro-1:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Install Requirements
+        run: sudo apt-get update && sudo apt-get install libxml2-utils xmlstarlet -y
+
+      - name: Push Changes to Jamf Pro Server 1
+        run: ./git4jamfpro.sh --url ${{ vars.JAMF_PRO_URL_1 }} --username ${{ vars.API_USER }} --password ${{ secrets.API_PASS_1 }} --push-changes-to-jamf-pro --backup-updated
+        
+      - name: Archive Backups
+        uses: actions/upload-artifact@v3
+        with:
+          name: jamf-pro-1-backups
+          path: backups
+  
+  # Push changes to a second Jamf Pro server (optional)
+  push-changes-to-jamf-pro-2:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Install Requirements
+        run: sudo apt-get update && sudo apt-get install libxml2-utils xmlstarlet -y
+
+      - name: Push Changes to Jamf Pro Server 2
+        run: ./git4jamfpro.sh --url ${{ vars.JAMF_PRO_URL_2 }} --username ${{ vars.API_USER }} --password ${{ secrets.API_PASS_2 }} --push-changes-to-jamf-pro --backup-updated
+        
+      - name: Archive Backups
+        uses: actions/upload-artifact@v3
+        with:
+          name: jamf-pro-2-backups
+          path: backups

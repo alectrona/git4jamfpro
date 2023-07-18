@@ -1,0 +1,36 @@
+version: 2.1
+
+jobs:
+  push-changes-to-jamf-pro-1:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: "Install Requirements"
+          command: sudo apt-get update && sudo apt-get install libxml2-utils xmlstarlet -y
+      - run:
+          name: "Update changes in Jamf Pro Server 1"
+          command: ./git4jamfpro.sh --url "$JAMF_PRO_URL_1" --username "$API_USER" --password "$API_PASS_1" --push-changes-to-jamf-pro --backup-updated
+      - store_artifacts:
+          path: ./backups
+
+  push-changes-to-jamf-pro-2:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: "Install Requirements"
+          command: sudo apt-get update && sudo apt-get install libxml2-utils xmlstarlet -y
+      - run:
+          name: "Update changes in Jamf Pro Server 2"
+          command: ./git4jamfpro.sh --url "$JAMF_PRO_URL_2" --username "$API_USER" --password "$API_PASS_2" --push-changes-to-jamf-pro --backup-updated
+      - store_artifacts:
+          path: ./backups
+
+workflows:
+  git4jamfpro-workflow:
+    jobs:
+      - push-changes-to-jamf-pro-1
+      - push-changes-to-jamf-pro-2

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<script>
+  <name>Sample ZSH Script</name>
+  <category>No category assigned</category>
+  <info>Information goes here.</info>
+  <notes>Notes go here.</notes>
+  <priority>After</priority>
+  <parameters>
+    <parameter4>Number 4</parameter4>
+    <parameter5>Number 5</parameter5>
+    <parameter6>Number 6</parameter6>
+  </parameters>
+  <os_requirements/>
+</script>

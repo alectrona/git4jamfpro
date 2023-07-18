@@ -1,0 +1,24 @@
+image: atlassian/default-image:3
+
+pipelines:
+  default:
+     - step:
+         name: 'Update changes in Jamf Pro server 1'
+         clone:
+           depth: 2
+         script:
+           - apt-get update && apt-get install libxml2-utils xmlstarlet -y
+           - ./git4jamfpro.sh --url "$JAMF_PRO_URL_1" --username "$API_USER" --password "$API_PASS_1" --push-changes-to-jamf-pro --backup-updated
+         artifacts:
+           - backups/**
+
+# Push changes to a second Jamf Pro server (optional)
+     - step:
+         name: 'Update changes in Jamf Pro server 2'
+         clone:
+           depth: 2
+         script:
+           - apt-get update && apt-get install libxml2-utils xmlstarlet -y
+           - ./git4jamfpro.sh --url "$JAMF_PRO_URL_2" --username "$API_USER" --password "$API_PASS_2" --push-changes-to-jamf-pro --backup-updated
+         artifacts:
+           - backups/**

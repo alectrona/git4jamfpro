@@ -47,3 +47,11 @@ git commit -m "initial commit with scripts/EAs"
 6. Configure your pipeline (see the [Wiki](https://github.com/alectrona/git4jamfpro/wiki) for [CircleCI](https://github.com/alectrona/git4jamfpro/wiki/Deploy-in-CircleCI), [Bitbucket](https://github.com/alectrona/git4jamfpro/wiki/Deploy-in-Bitbucket), and [GitHub](https://github.com/alectrona/git4jamfpro/wiki/Deploy-in-GitHub) setup).
 
 7. Now you can make changes to your scripts locally, push those changes to source control, and watch your pipeline automatically update Jamf Pro 🤯.
+
+### Required Permissions
+
+The Jamf Pro user that use with git4jamfpro must have the below permissions.
+| Jamf Pro Server Objects | Create | Read | Update | Delete |
+| ---------- | ------ | ---- | ------ | ------ |
+| Computer Extension Attributes	| ✓ | ✓ | ✓ |  |
+| Scripts	| ✓ | ✓ | ✓ |  |

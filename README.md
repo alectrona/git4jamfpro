@@ -50,7 +50,7 @@ git commit -m "initial commit with scripts/EAs"
 
 ### Required Permissions
 
-The Jamf Pro user that use with git4jamfpro must have the below permissions.
+The Jamf Pro user account used with git4jamfpro must have the below permissions.
 | Jamf Pro Server Objects | Create | Read | Update | Delete |
 | ---------- | ------ | ---- | ------ | ------ |
 | Computer Extension Attributes	| ✓ | ✓ | ✓ |  |

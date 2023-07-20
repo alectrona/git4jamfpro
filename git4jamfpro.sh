@@ -390,9 +390,9 @@ if ! command -v xmlstarlet > /dev/null ; then
     echo "Error: xmlstarlet is not installed, can't continue."
 
     if [[ "$unameType" == "Darwin" ]]; then
-        echo "Suggestion: Install jq with Homebrew: \"brew install xmlstarlet\""
+        echo "Suggestion: Install xmlstarlet with Homebrew: \"brew install xmlstarlet\""
     else
-        echo "Suggestion: Install jq with your distro's package manager."
+        echo "Suggestion: Install xmlstarlet with your distro's package manager."
     fi
 
     exit 1

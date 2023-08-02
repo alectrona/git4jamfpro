@@ -14,8 +14,8 @@ function finish() {
     # Expire the Bearer Token
     [[ -n "$apiToken" ]] && curl -s -H "Authorization: Bearer $apiToken" "$jamfProURL/uapi/auth/invalidateToken" -X POST
 
-    # rm "$scriptSummariesFile" 2>/dev/null
-    # rm "$eaSummariesFile" 2>/dev/null
+    rm "$scriptSummariesFile" 2>/dev/null
+    rm "$eaSummariesFile" 2>/dev/null
 }
 trap "finish" EXIT
 

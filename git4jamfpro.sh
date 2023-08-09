@@ -42,7 +42,7 @@ function get_jamf_pro_api_token() {
 function process_changed_script() {
     local change="$1"
     local changedFile="./${change}"
-    local record name script id xml httpCode
+    local record name script cleanRecord id xml httpCode
 
     # Bail if the file does not exist
     [[ ! -e "$changedFile" ]] && echo "File does not exist: $changedFile"
@@ -77,15 +77,27 @@ function process_changed_script() {
         return 1
     fi
 
+    # Make sure the record xml doesn't include things we don't want
+    cleanRecord=$(cat "$record" | xmlstarlet ed --delete '/script/id' \
+        --delete '/script/script_contents' \
+        --delete '/script/script_contents_encoded' \
+        --delete '/script/filename')
+
     # Ensure we can get a name from the xml record
-    name=$(cat "$record" | xmlstarlet sel -T -t -m '/script' -v name)
+    name=$(cat "$cleanRecord" | xmlstarlet sel -T -t -m '/script' -v name)
     [[ -z "$name" ]] && echo "Could not determine name of script from the xml record, skipping." && return 1
 
     # Determine the id of a script that may exist in Jamf Pro with the same name
     id=$(get_script_summaries | xmlstarlet sel -T -t -m "//script[name=\"$name\"]" -v id 2>/dev/null)
 
     # Create xml containing both the original xml record and the script contents
-    xml=$(cat "$record" | xmlstarlet ed -s '/script' -t elem -n script_contents -v "$(cat "$script")" | xmlstarlet fo -n -o)
+    xml=$(echo "$cleanRecord" | xmlstarlet ed -s '/script' -t elem -n script_contents -v "$(cat "$script" | xmlstarlet esc)" | xmlstarlet fo -n -o)
+
+    # Bail if the xml didn't get encoded properly
+    if [[ -z "$xml" ]]; then
+        echo "Failed to encode the script xml record and script contents properly."
+        return 1
+    fi
 
     # Update the script in Jamf Pro if it already exists
     # Otherwise, create a new script in Jamf Pro
@@ -117,7 +129,7 @@ function process_changed_script() {
 function process_changed_ea() {
     local change="$1"
     local changedFile="./${change}"
-    local record name script id xml httpCode
+    local record name script cleanRecord id xml httpCode
 
     # Bail if the file does not exist
     [[ ! -e "$changedFile" ]] && echo "File does not exist: $changedFile"
@@ -146,15 +158,25 @@ function process_changed_ea() {
         return 1
     fi
 
+    # Make sure the record xml doesn't include things we don't want
+    cleanRecord=$(cat "$record" | xmlstarlet ed --delete '/computer_extension_attribute/id' \
+        --delete '/computer_extension_attribute/input_type/script')
+
     # Ensure we can get a name of the EA from the xml record
-    name=$(cat "$record" | xmlstarlet sel -T -t -m '/computer_extension_attribute' -v name)
+    name=$(cat "$cleanRecord" | xmlstarlet sel -T -t -m '/computer_extension_attribute' -v name)
     [[ -z "$name" ]] && echo "Could not determine name of extension attribute from the xml record, skipping." && return 1
 
     # Create xml containing both the original xml record and the script contents (if exists)
     if [[ -n "$script" ]]; then
-        xml=$(cat "$record" | xmlstarlet ed -s '/computer_extension_attribute/input_type' -t elem -n script -v "$(cat "$script")" | xmlstarlet fo -n -o)
+        xml=$(cat "$cleanRecord" | xmlstarlet ed -s '/computer_extension_attribute/input_type' -t elem -n script -v "$(cat "$script" | xmlstarlet esc)" | xmlstarlet fo -n -o)
     else
-        xml=$(cat "$record")
+        xml=$(cat "$cleanRecord")
+    fi
+
+    # Bail if the xml didn't get encoded properly
+    if [[ -z "$xml" ]]; then
+        echo "Failed to encode the extension attribute xml record properly."
+        return 1
     fi
 
     # Determine the id of an ea that may exist in Jamf Pro with the same name

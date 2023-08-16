@@ -85,6 +85,7 @@ function process_changed_script() {
 
     # Ensure we can get a name from the xml record
     name=$(echo "$cleanRecord" | xmlstarlet sel -T -t -m '/script' -v name)
+
     [[ -z "$name" ]] && echo "Could not determine name of script from the xml record, skipping." && return 1
 
     # Determine the id of a script that may exist in Jamf Pro with the same name
@@ -163,14 +164,14 @@ function process_changed_ea() {
         --delete '/computer_extension_attribute/input_type/script')
 
     # Ensure we can get a name of the EA from the xml record
-    name=$(cat "$cleanRecord" | xmlstarlet sel -T -t -m '/computer_extension_attribute' -v name)
+    name=$(echo "$cleanRecord" | xmlstarlet sel -T -t -m '/computer_extension_attribute' -v name)
     [[ -z "$name" ]] && echo "Could not determine name of extension attribute from the xml record, skipping." && return 1
 
     # Create xml containing both the original xml record and the script contents (if exists)
     if [[ -n "$script" ]]; then
-        xml=$(cat "$cleanRecord" | xmlstarlet ed -s '/computer_extension_attribute/input_type' -t elem -n script -v "$(cat "$script" | xmlstarlet esc)" | xmlstarlet fo -n -o)
+        xml=$(echo "$cleanRecord" | xmlstarlet ed -s '/computer_extension_attribute/input_type' -t elem -n script -v "$(cat "$script" | xmlstarlet esc)" | xmlstarlet fo -n -o)
     else
-        xml=$(cat "$cleanRecord")
+        xml=$(echo "$cleanRecord")
     fi
 
     # Bail if the xml didn't get encoded properly

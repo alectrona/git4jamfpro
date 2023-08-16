@@ -85,7 +85,6 @@ function process_changed_script() {
 
     # Ensure we can get a name from the xml record
     name=$(echo "$cleanRecord" | xmlstarlet sel -T -t -m '/script' -v name)
-
     [[ -z "$name" ]] && echo "Could not determine name of script from the xml record, skipping." && return 1
 
     # Determine the id of a script that may exist in Jamf Pro with the same name
